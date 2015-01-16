@@ -30,7 +30,12 @@ install()
 	bash installer.sh -b -p "$PREFIX"
 
 	if [[ $(uname -s) = Darwin* ]]; then
-		install_name_tool -id $PREFIX/lib/libpython2.7.dylib $PREFIX/lib/libpython2.7.dylib
+		#run install_name_tool on all of the libpythonX.X.dylib dynamic
+		#libraries in anaconda
+		for entry in $PREFIX/lib/libpython*.dylib
+		do
+			install_name_tool -id $entry $entry
+		done
 	fi
 
 	install_ups
