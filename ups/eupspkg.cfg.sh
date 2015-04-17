@@ -29,6 +29,10 @@ install()
 
 	bash installer.sh -b -p "$PREFIX"
 
+        # workaround for libm issue (DM-1801); remove once Anaconda version 
+        # is bumped above 2.1.0
+	PATH="$PREFIX/bin:$PATH" conda update --yes system
+
 	if [[ $(uname -s) = Darwin* ]]; then
 		#run install_name_tool on all of the libpythonX.X.dylib dynamic
 		#libraries in anaconda
