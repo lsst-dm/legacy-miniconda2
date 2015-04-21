@@ -30,7 +30,7 @@ install()
 	bash installer.sh -b -p "$PREFIX"
 
     # workaround for libm issue (DM-1801); remove once Anaconda version is bumped above 2.1.0
-    if [[ -z $(conda list system | grep system) ]]; then
+	if ! PATH="$PREFIX/bin:$PATH" conda list --no-pip --json system >/dev/null; then
         echo "No system package to upgrade"
     else
         echo "Upgrading anaconda's system package"
