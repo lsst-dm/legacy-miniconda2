@@ -5,9 +5,9 @@ prep()
 	# Select the apropriate Anaconda distribution
 	OS=$(uname -s -m)
 	case "$OS" in
-		"Linux x86_64")		FN=Anaconda-2.1.0-Linux-x86_64.sh ;;
-		"Linux "*) 		FN=Anaconda-2.1.0-Linux-x86.sh ;;
-		"Darwin x86_64")	FN=Anaconda-2.1.0-MacOSX-x86_64.sh ;;
+		"Linux x86_64")		FN=Anaconda-2.2.0-Linux-x86_64.sh ;;
+		"Linux "*) 		FN=Anaconda-2.2.0-Linux-x86.sh ;;
+		"Darwin x86_64")	FN=Anaconda-2.2.0-MacOSX-x86_64.sh ;;
 		*) 			die "unsupported OS or architecture ($OS). try installing Anaconda manually."
 	esac
 
@@ -28,14 +28,6 @@ install()
 	clean_old_install
 
 	bash installer.sh -b -p "$PREFIX"
-
-    # workaround for libm issue (DM-1801); remove once Anaconda version is bumped above 2.1.0
-	if ! PATH="$PREFIX/bin:$PATH" conda list --no-pip --json system >/dev/null; then
-        echo "No system package to upgrade"
-    else
-        echo "Upgrading anaconda's system package"
-	  	PATH="$PREFIX/bin:$PATH" conda update --yes system
-    fi
 
 	if [[ $(uname -s) = Darwin* ]]; then
 		#run install_name_tool on all of the libpythonX.X.dylib dynamic
