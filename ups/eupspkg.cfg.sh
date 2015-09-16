@@ -1,42 +1,54 @@
 # EupsPkg config file. Sourced by 'eupspkg'
 
-prep()
-{
-	# Select the apropriate Anaconda distribution
-	OS=$(uname -s -m)
-	case "$OS" in
-		"Linux x86_64")		FN=Anaconda-2.2.0-Linux-x86_64.sh ;;
-		"Linux "*) 		FN=Anaconda-2.2.0-Linux-x86.sh ;;
-		"Darwin x86_64")	FN=Anaconda-2.2.0-MacOSX-x86_64.sh ;;
-		*) 			die "unsupported OS or architecture ($OS). try installing Anaconda manually."
-	esac
+MINICONDA_VERSION=${MINICONDA_VERSION:-3.9.1} # Version of Miniconda to install
 
-	# Prefer system curl; user-installed ones sometimes behave oddly
-	if [[ -x /usr/bin/curl ]]; then
-		CURL=${CURL:-/usr/bin/curl}
-	else
-		CURL=${CURL:-curl}
-	fi
-
-	"$CURL" -s -L -o installer.sh http://repo.continuum.io/archive/$FN
-}
-
+prep() { :; }
 build() { :; }
 
 install()
 {
-	clean_old_install
+    # Prefer system curl; user-installed ones sometimes behave oddly
+    if [[ -x /usr/bin/curl ]]; then
+        CURL=${CURL:-/usr/bin/curl}
+    else
+        CURL=${CURL:-curl}
+    fi
 
-	bash installer.sh -b -p "$PREFIX"
+    case $(uname -s) in
+        Linux*)  ana_platform="Linux-x86_64" ;;
+        Darwin*) ana_platform="MacOSX-x86_64" ;;
+        *)
+            echo "Cannot install miniconda: unsupported platform $(uname -s)"
+            exit 1
+            ;;
+    esac
 
-	if [[ $(uname -s) = Darwin* ]]; then
-		#run install_name_tool on all of the libpythonX.X.dylib dynamic
-		#libraries in anaconda
-		for entry in $PREFIX/lib/libpython*.dylib
-		do
-			install_name_tool -id $entry $entry
-		done
-	fi
+    miniconda_file_name="Miniconda-${MINICONDA_VERSION}-${ana_platform}.sh"
+    echo "::: Deploying Miniconda ${MINICONDA_VERSION} for ${ana_platform}"
+    $CURL -# -L -O http://repo.continuum.io/miniconda/${miniconda_file_name}
 
-	install_ups
+    clean_old_install
+
+    bash ${miniconda_file_name} -b -p "$PREFIX"
+
+    if [[ $(uname -s) = Darwin* ]]; then
+        #run install_name_tool on all of the libpythonX.X.dylib dynamic
+        #libraries in miniconda
+        for entry in $PREFIX/lib/libpython*.dylib
+            do
+                install_name_tool -id $entry $entry
+            done
+    fi
+
+    (
+        # Install packages on which the stack is know to depend
+        # Note: it's not clear if agreement was reached to use all of these,
+        #       or they crept in by accident.
+
+        export PATH="$PREFIX/bin:$PATH"
+        conda install --yes numpy scipy matplotlib requests cython sqlalchemy astropy
+        pip install stsci.distutils
+    )
+
+    install_ups
 }
