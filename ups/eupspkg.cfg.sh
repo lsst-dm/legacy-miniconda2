@@ -46,7 +46,10 @@ install()
         #       or they crept in by accident.
 
         export PATH="$PREFIX/bin:$PATH"
-        conda install --yes numpy scipy matplotlib requests cython sqlalchemy astropy
+        # XXX the list of conda packages should be kept in sync with
+        # https://github.com/lsst/lsstsw/blob/master/bin/deploy
+        # The lsstsw list of packages should be considered authoritative
+        conda install --yes numpy scipy matplotlib requests cython sqlalchemy astropy pandas
         pip install stsci.distutils
     )
 
