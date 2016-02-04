@@ -1,6 +1,6 @@
 # EupsPkg config file. Sourced by 'eupspkg'
 
-MINICONDA_VERSION=${MINICONDA_VERSION:-3.9.1} # Version of Miniconda to install
+MINICONDA2_VERSION=${MINICONDA2_VERSION:-3.19.0} # Version of Miniconda to install
 
 prep() { :; }
 build() { :; }
@@ -23,8 +23,8 @@ install()
             ;;
     esac
 
-    miniconda_file_name="Miniconda-${MINICONDA_VERSION}-${ana_platform}.sh"
-    echo "::: Deploying Miniconda ${MINICONDA_VERSION} for ${ana_platform}"
+    miniconda_file_name="Miniconda2-${MINICONDA2_VERSION}-${ana_platform}.sh"
+    echo "::: Deploying Miniconda ${MINICONDA2_VERSION} for ${ana_platform}"
     $CURL -# -L -O http://repo.continuum.io/miniconda/${miniconda_file_name}
 
     clean_old_install
