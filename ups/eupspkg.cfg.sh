@@ -43,7 +43,7 @@ install()
     (
         # Install packages on which the stack is known to depend
 
-        export PATH="$LSSTSW/miniconda/bin:$PATH"
+        export PATH="$PREFIX/bin:$PATH"
         local tmpdir=${TMPDIR:-/tmp}
         local reqfile='conda_packages.txt'
         local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/master/etc/'
