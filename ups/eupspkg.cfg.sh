@@ -41,16 +41,15 @@ install()
     fi
 
     (
-        # Install packages on which the stack is know to depend
-        # Note: it's not clear if agreement was reached to use all of these,
-        #       or they crept in by accident.
+        # Install packages on which the stack is known to depend
 
-        export PATH="$PREFIX/bin:$PATH"
-        # XXX the list of conda packages should be kept in sync with
-        # https://github.com/lsst/lsstsw/blob/master/bin/deploy
-        # The lsstsw list of packages should be considered authoritative
-        conda install --yes numpy scipy matplotlib requests cython sqlalchemy astropy pandas
-        pip install stsci.distutils
+        export PATH="$LSSTSW/miniconda/bin:$PATH"
+        local tmpdir=${TMPDIR:-/tmp}
+        local reqfile='conda_packages.txt'
+        local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/master/etc/'
+        (cd "$tmpdir"; $CURL -# -L -O "${baseurl}/${reqfile}")
+
+        conda install --yes --file "${tmpdir}/${reqfile}"
     )
 
     install_ups
