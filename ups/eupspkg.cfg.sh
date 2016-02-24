@@ -44,12 +44,17 @@ install()
         # Install packages on which the stack is known to depend
 
         export PATH="$PREFIX/bin:$PATH"
-        local tmpdir=${TMPDIR:-/tmp}
         local reqfile='conda_packages.txt'
         local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/master/etc/'
-        (cd "$tmpdir"; $CURL -# -L -O "${baseurl}/${reqfile}")
+        local tmpfile
+        tmpfile=$(mktemp -t "${reqfile}.XXXXXXXX")
+        # attempt to be a good citizen and not leave tmp files laying around
+        # after either a normal exit or an error condition
+        # shellcheck disable=SC2064
+        trap "{ rm -rf $tmpfile; }" EXIT
+        $CURL -# -L --silent "${baseurl}/${reqfile}" --output "$tmpfile"
 
-        conda install --yes --file "${tmpdir}/${reqfile}"
+        conda install --yes --file "$tmpfile"
     )
 
     install_ups
