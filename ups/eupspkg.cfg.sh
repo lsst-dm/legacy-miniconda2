@@ -15,8 +15,14 @@ install()
     fi
 
     case $(uname -s) in
-        Linux*)  ana_platform="Linux-x86_64" ;;
-        Darwin*) ana_platform="MacOSX-x86_64" ;;
+        Linux*)
+            ana_platform="Linux-x86_64"
+            conda_packages="conda_packages-linux-64.txt"
+            ;;
+        Darwin*)
+            ana_platform="MacOSX-x86_64"
+            conda_packages="conda_packages-osx-64.txt"
+            ;;
         *)
             echo "Cannot install miniconda: unsupported platform $(uname -s)"
             exit 1
@@ -44,15 +50,14 @@ install()
         # Install packages on which the stack is known to depend
 
         export PATH="$PREFIX/bin:$PATH"
-        local reqfile='conda_packages.txt'
         local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/master/etc/'
         local tmpfile
-        tmpfile=$(mktemp -t "${reqfile}.XXXXXXXX")
+        tmpfile=$(mktemp -t "${conda_packages}.XXXXXXXX")
         # attempt to be a good citizen and not leave tmp files laying around
         # after either a normal exit or an error condition
         # shellcheck disable=SC2064
         trap "{ rm -rf $tmpfile; }" EXIT
-        $CURL -# -L --silent "${baseurl}/${reqfile}" --output "$tmpfile"
+        $CURL -# -L --silent "${baseurl}/${conda_packages}" --output "$tmpfile"
 
         conda install --yes --file "$tmpfile"
     )
