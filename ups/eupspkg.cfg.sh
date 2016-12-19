@@ -17,11 +17,11 @@ install()
     case $(uname -s) in
         Linux*)
             ana_platform="Linux-x86_64"
-            conda_packages="conda_packages-linux-64.txt"
+            conda_packages="conda2_packages-linux-64.txt"
             ;;
         Darwin*)
             ana_platform="MacOSX-x86_64"
-            conda_packages="conda_packages-osx-64.txt"
+            conda_packages="conda2_packages-osx-64.txt"
             ;;
         *)
             echo "Cannot install miniconda: unsupported platform $(uname -s)"
