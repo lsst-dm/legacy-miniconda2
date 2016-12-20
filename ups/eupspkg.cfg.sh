@@ -50,7 +50,7 @@ install()
         # Install packages on which the stack is known to depend
 
         export PATH="$PREFIX/bin:$PATH"
-        local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/master/etc/'
+        local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/afcf8775f1539ac4f9db2939e0b127731b15a16d/etc/'
         local tmpfile
         tmpfile=$(mktemp -t "${conda_packages}.XXXXXXXX")
         # attempt to be a good citizen and not leave tmp files laying around
