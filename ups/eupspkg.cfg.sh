@@ -1,6 +1,6 @@
 # EupsPkg config file. Sourced by 'eupspkg'
 
-MINICONDA2_VERSION=${MINICONDA2_VERSION:-3.19.0} # Version of Miniconda to install
+MINICONDA2_VERSION=${MINICONDA2_VERSION:-4.2.12} # Version of Miniconda to install
 
 prep() { :; }
 build() { :; }
@@ -17,11 +17,11 @@ install()
     case $(uname -s) in
         Linux*)
             ana_platform="Linux-x86_64"
-            conda_packages="conda_packages-linux-64.txt"
+            conda_packages="conda2_packages-linux-64.txt"
             ;;
         Darwin*)
             ana_platform="MacOSX-x86_64"
-            conda_packages="conda_packages-osx-64.txt"
+            conda_packages="conda2_packages-osx-64.txt"
             ;;
         *)
             echo "Cannot install miniconda: unsupported platform $(uname -s)"
@@ -50,7 +50,7 @@ install()
         # Install packages on which the stack is known to depend
 
         export PATH="$PREFIX/bin:$PATH"
-        local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/master/etc/'
+        local baseurl='https://raw.githubusercontent.com/lsst/lsstsw/afcf8775f1539ac4f9db2939e0b127731b15a16d/etc/'
         local tmpfile
         tmpfile=$(mktemp -t "${conda_packages}.XXXXXXXX")
         # attempt to be a good citizen and not leave tmp files laying around
