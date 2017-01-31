@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # EupsPkg config file. Sourced by 'eupspkg'
 
 MINICONDA2_VERSION=${MINICONDA2_VERSION:-4.2.12} # Version of Miniconda to install
@@ -32,18 +34,18 @@ install()
 
     miniconda_file_name="Miniconda2-${MINICONDA2_VERSION}-${ana_platform}.sh"
     echo "::: Deploying Miniconda ${MINICONDA2_VERSION} for ${ana_platform}"
-    $CURL -# -L -O http://repo.continuum.io/miniconda/${miniconda_file_name}
+    $CURL -# -L -O "http://repo.continuum.io/miniconda/${miniconda_file_name}"
 
     clean_old_install
 
-    bash ${miniconda_file_name} -b -p "$PREFIX"
+    bash "$miniconda_file_name" -b -p "$PREFIX"
 
     if [[ $(uname -s) = Darwin* ]]; then
         #run install_name_tool on all of the libpythonX.X.dylib dynamic
         #libraries in miniconda
         for entry in $PREFIX/lib/libpython*.dylib
             do
-                install_name_tool -id $entry $entry
+                install_name_tool -id "$entry" "$entry"
             done
     fi
 
